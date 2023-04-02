@@ -2,26 +2,28 @@
 
 section .data
     gdtLoaded db "GDT Loaded.", 0x10, 0
-    startup db "HexaOS started up!", 0x10, 0
+    startup db 0xae, "HexaOS", 0xaf, " started up!", 0x10, 0
 
 section .text
 global main
 extern gdtInit
-extern vgaWrite
-extern vgaClear
+extern kbRead
+extern vgaTest
+
+%include "src/video/vga.inc"
 
 main:
     push ebp
     mov ebp, esp ; set up new stack
-    sub esp, 12
 
     call gdtInit
 
-    mov esi, gdtLoaded
-    call vgaWrite
+    print gdtLoaded
+    print startup
 
-    mov esi, startup
-    call vgaWrite
+    call kbRead
 
-    add esp, 12
     jmp $
+    mov esp, ebp
+    pop ebp
+    ret
