@@ -42,7 +42,7 @@ vgaWrite:
     je .nl
 
     mov ah, 0x0f
-    mov word [0xb8000 + ecx], ax
+    mov [0xb8000 + ecx], ax
     add ecx, 2
 
     mov [pos], ecx
@@ -85,7 +85,7 @@ vgaWriteChar:
     je .anl
     
     mov ah, 0x0f
-    mov word [0xb8000 + ecx], ax
+    mov [0xb8000 + ecx], ax
     add ecx, 2
 
     mov [pos], ecx

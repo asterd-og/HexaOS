@@ -8,7 +8,7 @@
 
 
 section .data
-kbMap: db '001234567890-=', 0xb, 0xf, 'qwertyuiop[]', 0x10, 0x12, 'asdfghjkl;||', 0x13, ';zxcvbnm,.;.;', 0x14, ' '
+kbMap: db "001234567890-=", 0xb, 0xf, "qwertyuiop[]", 0x10, 0x12, "asdfghjkl;||", 0x13, ";zxcvbnm,.;.;", 0x14, " "
 pressed db "key pressed ", 0
 
 section .text
@@ -32,8 +32,10 @@ kbRead:
     push ebp
     mov ebp, esp
 .kbLoop:
-    mov dx, 0x64
-    in al, dx
+    xor ax, ax
+    xor dx, dx
+    
+    in al, 0x64
 
     and ax, 0x1 ; res & 1
 
@@ -42,9 +44,12 @@ kbRead:
 
     jmp .kbLoop
 .cont:
-    xor eax, eax
-    mov dx, 0x60
-    in al, dx
+    xor ax, ax
+    in al, 0x60
+    cmp al, 57
+    jle .kbPrintChar
+    jmp .kbLoop
+.kbPrintChar:
     mov al, byte [kbMap + eax]
     call vgaWriteChar
     jmp .kbLoop

@@ -2,13 +2,15 @@
 
 section .data
     gdtLoaded db "GDT Loaded.", 0x10, 0
-    startup db 0xae, "HexaOS", 0xaf, " started up!", 0x10, 0
+    startup db 0xae, "HexaOS", 0xaf, 0x10, 0
+    cmd db 0xaf, " ", 0
 
 section .text
 global main
 extern gdtInit
 extern kbRead
 extern vgaTest
+extern vgaWriteChar
 
 %include "src/video/vga.inc"
 
@@ -20,6 +22,7 @@ main:
 
     print gdtLoaded
     print startup
+    print cmd
 
     call kbRead
 
